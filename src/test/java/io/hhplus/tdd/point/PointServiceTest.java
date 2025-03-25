@@ -114,7 +114,7 @@ public class PointServiceTest {
             //when, then
             assertThatThrownBy(() -> pointService.chargePointOf(USER_ID, chargeAmount))
                     .isInstanceOf(RuntimeException.class)
-                    .hasMessage(MINIMUM_CHARGE_AMOUNT + " 포인트 이상 충전해주세요");
+                    .hasMessage(MINIMUM_CHARGE_AMOUNT + " 포인트 이상 충전해주세요.");
             verify(userPointTable, never()).insertOrUpdate(anyLong(), anyLong());
         }
 
@@ -126,7 +126,7 @@ public class PointServiceTest {
             //when, then
             assertThatThrownBy(() -> pointService.chargePointOf(USER_ID, chargeAmount))
                     .isInstanceOf(RuntimeException.class)
-                    .hasMessage("1회 최대 충전금액은  " + MAXIMUM_CHARGE_AMOUNT + "입니다.");
+                    .hasMessage("1회 최대 충전금액은 " + MAXIMUM_CHARGE_AMOUNT + "입니다.");
             verify(userPointTable, never()).insertOrUpdate(anyLong(), anyLong());
 
         }
