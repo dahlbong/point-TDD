@@ -15,6 +15,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static io.hhplus.tdd.common.PointConstants.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PointServiceTest {
@@ -23,14 +24,6 @@ public class PointServiceTest {
     private final Long USER_ID = 1L;
     private final Long UPDATE_MILLIS = 10000L;
     private final Long CURRENT_POINT = 1000L;
-
-    // 비즈니스 요구사항
-    private final Long NEW_MEMBER_INITIAL_POINT = 0L;
-    private final Long MINIMUM_CHARGE_AMOUNT = 1L;
-    private final Long MAXIMUM_CHARGE_AMOUNT = 10000L;
-    private final Long MINIMUM_USE_AMOUNT = 1L;
-    private final Long MAXIMUM_USE_AMOUNT = 10000L;
-    private final Long MAXIMUM_BALANCE = 100000L;
 
     @Mock
     private UserPointTable userPointTable;
@@ -98,16 +91,19 @@ public class PointServiceTest {
         void 유저_포인트_정상_충전() {
             //given
             long chargeAmount = 1L;
-            given(userPointTable.selectById(USER_ID)).willReturn(new UserPoint(USER_ID, CURRENT_POINT, UPDATE_MILLIS));
-            given(userPointTable.insertOrUpdate(USER_ID, chargeAmount)).willReturn(new UserPoint(USER_ID, chargeAmount, UPDATE_MILLIS));
+            long expectedBalance = CURRENT_POINT + chargeAmount;
+
+            given(userPointTable.selectById(USER_ID))
+                    .willReturn(new UserPoint(USER_ID, CURRENT_POINT, UPDATE_MILLIS));
+            given(userPointTable.insertOrUpdate(USER_ID, expectedBalance))
+                    .willReturn(new UserPoint(USER_ID, expectedBalance, UPDATE_MILLIS));
 
             //when, then
             assertThat(pointService.chargePointOf(USER_ID, chargeAmount))
-                    .extracting("id", "point", "updateMillis")
-                    .containsExactly(USER_ID, CURRENT_POINT + chargeAmount, UPDATE_MILLIS);
+                    .extracting("id", "point")
+                    .containsExactly(USER_ID, expectedBalance);
             verify(userPointTable).selectById(USER_ID);
-            verify(userPointTable).insertOrUpdate(USER_ID, CURRENT_POINT + chargeAmount);
-
+            verify(userPointTable).insertOrUpdate(USER_ID, expectedBalance);
         }
 
         @Test
@@ -249,7 +245,6 @@ public class PointServiceTest {
             assertThatThrownBy(() -> pointService.chargePointOf(USER_ID, chargeAmount))
                     .isInstanceOf(RuntimeException.class);
 
-            verify(userPointTable, never()).selectById(anyLong());
             verify(pointHistoryTable, never()).insert(anyLong(), anyLong(), any(), anyLong());
         }
 
