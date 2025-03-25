@@ -33,7 +33,7 @@ public class PointService {
         PointValidator.validateChargeBalance(currentPoint, amount);
         long balance = currentPoint + amount;
 
-        return updatePointBalance(userId, balance, TransactionType.CHARGE);
+        return updatePointBalance(userId, balance, TransactionType.CHARGE, amount);
     }
 
     // 포인트 사용
@@ -44,23 +44,18 @@ public class PointService {
         // 잔액 검증
         PointValidator.validateSufficientBalance(currentPoint, amount);
         long balance = currentPoint - amount;
-        return updatePointBalance(userId, balance, TransactionType.USE);
+        return updatePointBalance(userId, balance, TransactionType.USE, amount);
     }
 
     // 포인트 사용 or 충전 시 잔액 갱신
-    public UserPoint updatePointBalance(long userId, long newAmount, TransactionType type) {
-        UserPoint updatedPoint = userPointTable.insertOrUpdate(userId, newAmount);
-        pointHistoryTable.insert(userId, newAmount, type, currentTime());
+    public UserPoint updatePointBalance(long userId, long newBalance, TransactionType type, long transactionAmount) {
+        UserPoint updatedPoint = userPointTable.insertOrUpdate(userId, newBalance);
+        pointHistoryTable.insert(userId, transactionAmount, type, updatedPoint.updateMillis());
         return updatedPoint;
     }
 
-
-    private long currentPointOf(long userId) {
+    public long currentPointOf(long userId) {
         return getPointOf(userId).point();
-    }
-
-    private long currentTime() {
-        return System.currentTimeMillis();
     }
 
 }
