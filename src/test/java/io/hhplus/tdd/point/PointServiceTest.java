@@ -17,7 +17,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class PointServiceUnitTest {
+public class PointServiceTest {
 
     // 기본 값
     private final Long USER_ID = 1L;
@@ -70,16 +70,18 @@ public class PointServiceUnitTest {
         void 유저_포인트_히스토리_정상조회() {
             //given
             List<PointHistory> history = List.of(
-                    new PointHistory(1L, USER_ID, 100L, TransactionType.CHARGE, 10000L),
-                    new PointHistory(2L, USER_ID, 50L, TransactionType.USE, 10005L),
-                    new PointHistory(3L, USER_ID, 70L, TransactionType.CHARGE, 10010L),
-                    new PointHistory(4L, USER_ID, 80L, TransactionType.USE, 10015L)
+                    new PointHistory(1L, USER_ID, CURRENT_POINT, TransactionType.CHARGE, UPDATE_MILLIS),
+                    new PointHistory(2L, USER_ID, 400L, TransactionType.USE, 20000L),
+                    new PointHistory(3L, USER_ID, 200L, TransactionType.CHARGE, 22000L)
             );
             given(pointHistoryTable.selectAllByUserId(USER_ID)).willReturn(history);
 
-            //when, then
-            assertThat(pointHistoryTable.selectAllByUserId(USER_ID)).hasSize(3)
-                    .extracting("id", "userId", "transactionType", "updateMillis")
+            //when
+            List<PointHistory> result = pointService.getPointHistoriesOf(USER_ID);
+
+            // then
+            assertThat(result).hasSize(3)
+                    .extracting("id", "userId", "amount", "type", "updateMillis")
                     .containsExactly(
                             tuple(1L, USER_ID, CURRENT_POINT, TransactionType.CHARGE, UPDATE_MILLIS),
                             tuple(2L, USER_ID, 400L, TransactionType.USE, 20000L),
