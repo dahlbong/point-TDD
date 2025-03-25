@@ -26,17 +26,23 @@ public class PointService {
 
     // 포인트 충전
     public UserPoint chargePointOf(long userId, long amount) {
-        long balance = currentPointOf(userId) + amount;
+        // 충전 금액 검증
+        PointValidator.validateChargeAmount(amount);
+        long currentPoint = currentPointOf(userId);
+        // 잔액 검증
+        PointValidator.validateChargeBalance(currentPoint, amount);
+        long balance = currentPoint + amount;
+
         return updatePointBalance(userId, balance, TransactionType.CHARGE);
     }
 
     // 포인트 사용
     public UserPoint usePointOf(long userId, long amount) {
+        // 사용 금액 검증
+        PointValidator.validateUseAmount(amount);
         long currentPoint = currentPointOf(userId);
-        if (currentPoint < amount) {
-            throw new IllegalArgumentException("잔고 부족 (현재잔고: " + currentPoint + "원)");
-        }
-
+        // 잔액 검증
+        PointValidator.validateSufficientBalance(currentPoint, amount);
         long balance = currentPoint - amount;
         return updatePointBalance(userId, balance, TransactionType.USE);
     }
