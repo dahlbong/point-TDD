@@ -26,7 +26,7 @@ public class PointValidator {
         }
     }
 
-    private static void validateMinimumAmount(long amount, long minimumAmount, String transactionType) {
+    public static void validateMinimumAmount(long amount, long minimumAmount, String transactionType) {
         if (amount < minimumAmount) {
             throw new IllegalArgumentException(String.format(
                     "%d 포인트 이상 %s해주세요.",
@@ -36,7 +36,7 @@ public class PointValidator {
         }
     }
 
-    private static void validateMaximumAmount(long amount, long maximumAmount, String transactionType) {
+    public static void validateMaximumAmount(long amount, long maximumAmount, String transactionType) {
         if (amount > maximumAmount) {
             throw new IllegalArgumentException(String.format(
                     "1회 최대 %s금액은 %d입니다.",
