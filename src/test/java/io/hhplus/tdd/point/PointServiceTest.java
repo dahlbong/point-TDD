@@ -134,7 +134,7 @@ public class PointServiceTest {
         @Test
         void 최대_잔고_초과_예외_처리 () {
             //given
-            long chargeAmount = MAXIMUM_CHARGE_AMOUNT - CURRENT_POINT + 1L;
+            long chargeAmount = MAXIMUM_BALANCE - CURRENT_POINT + 1L;
             given(userPointTable.selectById(USER_ID))
                     .willReturn(new UserPoint(USER_ID, CURRENT_POINT, UPDATE_MILLIS));
 
