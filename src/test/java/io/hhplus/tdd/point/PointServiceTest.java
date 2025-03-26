@@ -41,7 +41,7 @@ public class PointServiceTest {
             given(userPointTable.selectById(USER_ID))
                     .willReturn(new UserPoint(USER_ID, CURRENT_POINT, UPDATE_MILLIS));
             //when, then
-            assertThat(pointService.getPointOf(USER_ID))
+            assertThat(pointService.getUserPointOf(USER_ID))
                     .extracting("id", "point", "updateMillis")
                     .containsExactly(USER_ID, CURRENT_POINT, UPDATE_MILLIS);
             verify(userPointTable).selectById(USER_ID);
@@ -53,7 +53,7 @@ public class PointServiceTest {
             given(userPointTable.selectById(USER_ID))
                     .willReturn(new UserPoint(USER_ID, NEW_MEMBER_INITIAL_POINT, UPDATE_MILLIS));
             //when, then
-            assertThat(pointService.getPointOf(USER_ID))
+            assertThat(pointService.getUserPointOf(USER_ID))
                     .extracting("id", "point", "updateMillis")
                     .containsExactly(USER_ID, NEW_MEMBER_INITIAL_POINT, UPDATE_MILLIS);
             verify(userPointTable).selectById(USER_ID);

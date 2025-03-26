@@ -15,7 +15,7 @@ public class PointService {
     private final PointHistoryTable pointHistoryTable;
 
     // 포인트 조회
-    public UserPoint getPointOf(long userId) {
+    public UserPoint getUserPointOf(long userId) {
         return userPointTable.selectById(userId);
     }
 

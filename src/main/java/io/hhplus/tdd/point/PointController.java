@@ -25,7 +25,7 @@ public class PointController {
             @PathVariable long id
     ) {
         log.info("포인트 조회 요청: userId={}", id);
-        return pointService.getPointOf(id);
+        return pointService.getUserPointOf(id);
     }
 
     /**
