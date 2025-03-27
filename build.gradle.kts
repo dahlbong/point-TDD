@@ -50,3 +50,7 @@ tasks.test {
     ignoreFailures = true
     useJUnitPlatform()
 }
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-parameters")
+}
